@@ -1,0 +1,578 @@
+@font-face {
+  font-family: 'fx-symbols-web-2-0';
+  src:
+    url('fonts/fx-symbols-web-2-0.woff2?jeztk8') format('woff2'),
+    url('fonts/fx-symbols-web-2-0.woff?jeztk8') format('woff'),
+    url('fonts/fx-symbols-web-2-0.svg?jeztk8#fx-symbols-web-2-0') format('svg');
+  font-weight: normal;
+  font-style: normal;
+  font-display: block;
+}
+
+[class^="fx-symbol-"], [class*=" fx-symbol-"] {
+  /* use !important to prevent issues with browser extensions that change fonts */
+  font-family: 'fx-symbols-web-2-0' !important;
+  speak: never;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.fx-symbol-browser:before {
+  content: "\e929";
+}
+.fx-symbol-terminal-new:before {
+  content: "\e924";
+}
+.fx-symbol-puzzle:before {
+  content: "\e926";
+}
+.fx-symbol-apple-new:before {
+  content: "\e927";
+}
+.fx-symbol-windows-new:before {
+  content: "\e928";
+}
+.fx-symbol-manage-risk:before {
+  content: "\e923";
+}
+.fx-symbol-download:before {
+  content: "\e921";
+}
+.fx-symbol-check-in-circle:before {
+  content: "\e91e";
+}
+.fx-symbol-markets:before {
+  content: "\e91d";
+}
+.fx-symbol-ico-deposit:before {
+  content: "\e91c";
+}
+.fx-symbol-trading-tools:before {
+  content: "\e91b";
+}
+.fx-symbol-bell:before {
+  content: "\e919";
+}
+.fx-symbol-trade:before {
+  content: "\e91a";
+}
+.fx-symbol-mobile-phone-bold:before {
+  content: "\e917";
+}
+.fx-symbol-vps-bold:before {
+  content: "\e918";
+}
+.fx-symbol-comparison-trading:before {
+  content: "\e916";
+}
+.fx-symbol-download-small:before {
+  content: "\e915";
+}
+.fx-symbol-half-star:before {
+  content: "\e914";
+}
+.fx-symbol-chrome:before {
+  content: "\e913";
+}
+.fx-symbol-watch-webinars:before {
+  content: "\e912";
+}
+.fx-symbol-mt4-5-platforms:before {
+  content: "\e90f";
+}
+.fx-symbol-forex:before {
+  content: "\e90b";
+}
+.fx-symbol-average-time:before {
+  content: "\e909";
+}
+.fx-symbol-shares:before {
+  content: "\e90a";
+}
+.fx-symbol-mobile-phone:before {
+  content: "\e908";
+}
+.fx-symbol-cv:before {
+  content: "\e902";
+}
+.fx-symbol-levels-education:before {
+  content: "\e9e3";
+}
+.fx-symbol-protection:before {
+  content: "\ea0e";
+}
+.fx-symbol-shield:before {
+  content: "\ea0d";
+}
+.fx-symbol-btn-economic-calendar:before {
+  content: "\ea0c";
+}
+.fx-symbol-per-month30:before {
+  content: "\ea0a";
+}
+.fx-symbol-hours24:before {
+  content: "\ea0b";
+}
+.fx-symbol-partners-star:before {
+  content: "\e977";
+}
+.fx-symbol-introducer-affiliate:before {
+  content: "\e996";
+}
+.fx-symbol-full-transparency:before {
+  content: "\ea09";
+}
+.fx-symbol-ndd:before {
+  content: "\e950";
+}
+.fx-symbol-nostp:before {
+  content: "\e952";
+}
+.fx-symbol-noecn:before {
+  content: "\e9fe";
+}
+.fx-symbol-direct-app:before {
+  content: "\e9ff";
+}
+.fx-symbol-employees:before {
+  content: "\ea02";
+}
+.fx-symbol-fxpro-icon:before {
+  content: "\ea03";
+}
+.fx-symbol-wechat:before {
+  content: "\ea06";
+}
+.fx-symbol-guides:before {
+  content: "\ea07";
+}
+.fx-symbol-briefcase:before {
+  content: "\e9ec";
+}
+.fx-symbol-datacenter:before {
+  content: "\e9f4";
+}
+.fx-symbol-comparison:before {
+  content: "\e9f6";
+}
+.fx-symbol-cryptocurrencies:before {
+  content: "\e9f7";
+}
+.fx-symbol-energies:before {
+  content: "\e9f8";
+}
+.fx-symbol-futures:before {
+  content: "\e9f9";
+}
+.fx-symbol-indices:before {
+  content: "\e9fa";
+}
+.fx-symbol-metals:before {
+  content: "\e9fb";
+}
+.fx-symbol-register-pen:before {
+  content: "\e9ed";
+}
+.fx-symbol-fund-suitcase:before {
+  content: "\e9ee";
+}
+.fx-symbol-trade-bull-lion:before {
+  content: "\e9ef";
+}
+.fx-symbol-hammer:before {
+  content: "\e9f0";
+}
+.fx-symbol-cup:before {
+  content: "\e9f1";
+}
+.fx-symbol-salut:before {
+  content: "\e9f2";
+}
+.fx-symbol-safety:before {
+  content: "\e9ea";
+}
+.fx-symbol-apple2:before {
+  content: "\e9e8";
+}
+.fx-symbol-android2:before {
+  content: "\e9e9";
+}
+.fx-symbol-callback:before {
+  content: "\e9e4";
+}
+.fx-symbol-qq:before {
+  content: "\e9e6";
+}
+.fx-symbol-copy-icon:before {
+  content: "\e9e2";
+}
+.fx-symbol-bank:before {
+  content: "\e9e1";
+}
+.fx-symbol-card:before {
+  content: "\e9e0";
+}
+.fx-symbol-education:before {
+  content: "\e9de";
+}
+.fx-symbol-stop-loss-take-profit:before {
+  content: "\e9db";
+}
+.fx-symbol-economic-calendar:before {
+  content: "\e9dc";
+}
+.fx-symbol-trading-account3:before {
+  content: "\e9d8";
+  color: #ff7675;
+}
+.fx-symbol-wallet3:before {
+  content: "\e9d9";
+  color: #00b894;
+}
+.fx-symbol-payment-method:before {
+  content: "\e9da";
+  color: #0a95ff;
+}
+.fx-symbol-diversification:before {
+  content: "\e9d5";
+}
+.fx-symbol-money-management:before {
+  content: "\e9d6";
+}
+.fx-symbol-f-small:before {
+  content: "\e9d4";
+}
+.fx-symbol-Frame:before {
+  content: "\e9d3";
+}
+.fx-symbol-menu:before {
+  content: "\e9d0";
+}
+.fx-symbol-arrow-back:before {
+  content: "\e9cd";
+}
+.fx-symbol-icon-free:before {
+  content: "\e9cb";
+}
+.fx-symbol-site-icon:before {
+  content: "\e9c5";
+}
+.fx-symbol-cross:before {
+  content: "\e9c4";
+}
+.fx-symbol-e-gym:before {
+  content: "\e9c3";
+}
+.fx-symbol-choice:before {
+  content: "\e9b7";
+}
+.fx-symbol-global1:before {
+  content: "\e9b8";
+}
+.fx-symbol-analysis1:before {
+  content: "\e9bb";
+}
+.fx-symbol-time-icon:before {
+  content: "\e9c0";
+}
+.fx-symbol-download-centre:before {
+  content: "\e9ae";
+}
+.fx-symbol-calgo-blue:before {
+  content: "\e9af";
+}
+.fx-symbol-pdf:before {
+  content: "\e9b1";
+}
+.fx-symbol-video:before {
+  content: "\e9b2";
+}
+.fx-symbol-windows:before {
+  content: "\e9aa";
+}
+.fx-symbol-pin:before {
+  content: "\e9a8";
+}
+.fx-symbol-instagram:before {
+  content: "\e9a7";
+}
+.fx-symbol-access-portal:before {
+  content: "\e9a5";
+}
+.fx-symbol-subscribe:before {
+  content: "\e9a6";
+}
+.fx-symbol-central:before {
+  content: "\e9a2";
+}
+.fx-symbol-multi-terminal:before {
+  content: "\e9a4";
+}
+.fx-symbol-medical:before {
+  content: "\e99e";
+}
+.fx-symbol-fund:before {
+  content: "\e99f";
+}
+.fx-symbol-edge-logo:before {
+  content: "\e99c";
+}
+.fx-symbol-android:before {
+  content: "\e992";
+}
+.fx-symbol-apple:before {
+  content: "\e993";
+}
+.fx-symbol-safari:before {
+  content: "\e98d";
+}
+.fx-symbol-google:before {
+  content: "\e98e";
+}
+.fx-symbol-opera:before {
+  content: "\e98f";
+}
+.fx-symbol-firefox:before {
+  content: "\e990";
+}
+.fx-symbol-community:before {
+  content: "\e98b";
+}
+.fx-symbol-environment:before {
+  content: "\e98c";
+}
+.fx-symbol-feedback:before {
+  content: "\e989";
+}
+.fx-symbol-vps:before {
+  content: "\e986";
+}
+.fx-symbol-calculators:before {
+  content: "\e981";
+}
+.fx-symbol-news:before {
+  content: "\e982";
+}
+.fx-symbol-wallets:before {
+  content: "\e983";
+}
+.fx-symbol-award-icon:before {
+  content: "\e980";
+}
+.fx-symbol-reverse:before {
+  content: "\e979";
+}
+.fx-symbol-percentage:before {
+  content: "\e97a";
+}
+.fx-symbol-info3:before {
+  content: "\e978";
+}
+.fx-symbol-instrument:before {
+  content: "\e96f";
+}
+.fx-symbol-leverage:before {
+  content: "\e970";
+}
+.fx-symbol-stamp:before {
+  content: "\e971";
+}
+.fx-symbol-no-commission:before {
+  content: "\e972";
+}
+.fx-symbol-trade-financial:before {
+  content: "\e973";
+}
+.fx-symbol-profits:before {
+  content: "\e974";
+}
+.fx-symbol-place-trade:before {
+  content: "\e976";
+}
+.fx-symbol-play-icon:before {
+  content: "\e96d";
+}
+.fx-symbol-info2:before {
+  content: "\e96e";
+}
+.fx-symbol-clock:before {
+  content: "\e964";
+}
+.fx-symbol-info:before {
+  content: "\e965";
+}
+.fx-symbol-arrow:before {
+  content: "\e963";
+}
+.fx-symbol-rate-scale:before {
+  content: "\e95e";
+}
+.fx-symbol-algorithm:before {
+  content: "\e95f";
+}
+.fx-symbol-keys:before {
+  content: "\e960";
+}
+.fx-symbol-rating:before {
+  content: "\e961";
+}
+.fx-symbol-headset:before {
+  content: "\e956";
+}
+.fx-symbol-star:before {
+  content: "\e957";
+}
+.fx-symbol-bahamas-icon:before {
+  content: "\e958";
+}
+.fx-symbol-uae-icon:before {
+  content: "\e959";
+}
+.fx-symbol-monaco-icon:before {
+  content: "\e95a";
+}
+.fx-symbol-cy-icon:before {
+  content: "\e95b";
+}
+.fx-symbol-uk-icon:before {
+  content: "\e95c";
+}
+.fx-symbol-mclaren2:before {
+  content: "\e953";
+}
+.fx-symbol-monaco:before {
+  content: "\e954";
+}
+.fx-symbol-avfc:before {
+  content: "\e949";
+}
+.fx-symbol-ffc:before {
+  content: "\e94a";
+}
+.fx-symbol-virgin:before {
+  content: "\e94b";
+}
+.fx-symbol-mclaren:before {
+  content: "\e94c";
+}
+.fx-symbol-s-logo:before {
+  content: "\e94d";
+}
+.fx-symbol-irc:before {
+  content: "\e94e";
+}
+.fx-symbol-wrc:before {
+  content: "\e94f";
+}
+.fx-symbol-asmonacofc:before {
+  content: "\e951";
+}
+.fx-symbol-counterparty-risks:before {
+  content: "\e943";
+}
+.fx-symbol-doc:before {
+  content: "\e945";
+}
+.fx-symbol-shield-icon:before {
+  content: "\e946";
+}
+.fx-symbol-left:before {
+  content: "\e93e";
+}
+.fx-symbol-right:before {
+  content: "\e93f";
+}
+.fx-symbol-tools:before {
+  content: "\e930";
+}
+.fx-symbol-supertrader:before {
+  content: "\e931";
+}
+.fx-symbol-platform:before {
+  content: "\e932";
+}
+.fx-symbol-ctrader-logo:before {
+  content: "\e934";
+}
+.fx-symbol-mt-5-logo:before {
+  content: "\e935";
+}
+.fx-symbol-mt-4-logo:before {
+  content: "\e936";
+}
+.fx-symbol-award:before {
+  content: "\e937";
+}
+.fx-symbol-orders:before {
+  content: "\e939";
+}
+.fx-symbol-provider:before {
+  content: "\e93b";
+}
+.fx-symbol-global:before {
+  content: "\e93c";
+}
+.fx-symbol-slide-award:before {
+  content: "\e92c";
+}
+.fx-symbol-get-started:before {
+  content: "\e92b";
+}
+.fx-symbol-crown:before {
+  content: "\e920";
+}
+.fx-symbol-benefits-2:before {
+  content: "\e925";
+}
+.fx-symbol-benefits-5:before {
+  content: "\e922";
+}
+.fx-symbol-user:before {
+  content: "\e91f";
+}
+.fx-symbol-race-flag:before {
+  content: "\e910";
+}
+.fx-symbol-logo-mobile:before {
+  content: "\e911";
+}
+.fx-symbol-chevron:before {
+  content: "\e900";
+}
+.fx-symbol-replay:before {
+  content: "\e901";
+}
+.fx-symbol-search:before {
+  content: "\e907";
+}
+.fx-symbol-globe:before {
+  content: "\e905";
+}
+.fx-symbol-facebook:before {
+  content: "\e903";
+}
+.fx-symbol-google-plus:before {
+  content: "\e904";
+}
+.fx-symbol-linkedin:before {
+  content: "\e906";
+}
+.fx-symbol-telegram:before {
+  content: "\e90c";
+}
+.fx-symbol-twitter:before {
+  content: "\e90d";
+}
+.fx-symbol-youtube:before {
+  content: "\e90e";
+}
+.fx-symbol-arrow-right:before {
+  content: "\e9eb";
+}

@@ -1,0 +1,144 @@
+class SectionMarketsController {
+	_loadedMarkets = [];
+	featuresQuotesTimer;
+	allQuotesTimer;
+
+	constructor() {
+		this.quotesController = new QuotesController();
+	}
+
+	init() {
+		var activeMarketId = document.querySelector(".market-select-btn.active").id;
+		document.querySelector(".table-body").innerHTML = "";
+		document.querySelector("#market-categories-container").innerHTML = "";
+		this._loadedMarkets = [];
+		this._loadCategories().then(() => {
+			var activeMarket = document.querySelector("#" + activeMarketId);
+
+			if (activeMarket) {
+				return this._loadMarket(activeMarketId);
+			}
+
+			return this._loadMarket("global_Popular");
+		}).then((isNewMarketSet) => {
+			if (!isNewMarketSet) {
+				this._setMarketsQuotes();
+			}
+		});
+	}
+
+	_setEvents() {
+		EventService.applyClickEvent(".market-select-btn", this._onMarketSelect.bind(this))
+	}
+
+	_loadCategories() {
+		var language = document.documentElement.lang;
+		return RestrictionService.getRestrictionStatePromise().then(state => {
+			var data = {
+				restrictionState: state
+			};
+			return HttpService.postPromise("/api/static-page/market-categories/" + language, data, null);
+		}).then(categories => {
+			document.querySelector("#market-categories-container").innerHTML = categories;
+			this._setEvents();
+			return true;
+		});
+	}
+
+	_loadMarket(market) {
+		var language = document.documentElement.lang;
+		var category = document.getElementById(market).dataset.category;
+		const restrictionStatePromise = RestrictionService.getRestrictionStatePromise();
+		const partnerPromise = PartnerService.getPartner();
+
+		return Promise.all([restrictionStatePromise, partnerPromise]).then(([restrictionState, partner]) => {
+			const data = {
+				restrictionState,
+				partner
+			};
+			return HttpService.postPromise("/api/static-page/market-instruments/" + language + "/" + category, data, null)
+		}).then(response => {
+			document.querySelector(".table-body").insertAdjacentHTML('beforeend', response);
+			this._loadedMarkets.push(market);
+			return this._setActiveMarket(market);
+		});
+	}
+
+	_onMarketSelect(e) {
+		var market = e.currentTarget.id;
+
+		if (this._loadedMarkets.indexOf(market) === -1) {
+			this._loadMarket(market);
+		} else {
+			this._setActiveMarket(market);
+		}
+
+		const linknoteEl = document.querySelector(".linknote");
+		const currentMarketEl = document.querySelector(".linknote .current-market");
+
+		if (linknoteEl && currentMarketEl) {
+
+			if (market === "global_Popular") {
+				linknoteEl.classList.add("d-none");
+			} else {
+				currentMarketEl.innerHTML = this.dataset.title;
+				document.querySelector(".linknote a").href = this.dataset.url;
+				linknoteEl.classList.remove("d-none");
+			}
+
+		}
+	}
+
+	_setActiveMarket(market) {
+		var marketBtn = document.getElementById(market);
+		if (!marketBtn.classList.contains("active")) {
+			var activeMarketBtn = document.querySelector(".active.market-select-btn");
+			var marketInstruments = document.getElementsByClassName("market-instrument");
+
+			if (activeMarketBtn) {
+				activeMarketBtn.classList.remove("active");
+			}
+			marketBtn.classList.add("active");
+
+			Array.prototype.forEach.call(marketInstruments, function (instrument) {
+
+				if (instrument.classList.contains(market)) {
+					instrument.classList.remove("d-none");
+				} else if (!instrument.classList.contains("d-none")) {
+					instrument.classList.add("d-none");
+				}
+
+			});
+			this._setMarketsQuotes();
+			return true;
+		}
+
+		return false;
+	}
+
+	_setMarketsQuotes() {
+		var category = document.querySelector(".active.market-select-btn").dataset.category;
+		const request = () => {
+			this.quotesController.setMarketsQuotes(category)
+				.then(() => {
+					this.quotesController.updateMarketsQuotes();
+				});
+			return request;
+		}
+		if (category === 'FuturesAll' && !this.featuresQuotesTimer) {
+			if (this.allQuotesTimer) {
+				clearInterval(this.allQuotesTimer);
+				this.allQuotesTimer = 0;
+			}
+			this.featuresQuotesTimer = setInterval(request(), 30 * 1000)
+		} else if (category !== 'FuturesAll' && !this.allQuotesTimer) {
+			if (this.featuresQuotesTimer) {
+				clearInterval(this.featuresQuotesTimer);
+				this.featuresQuotesTimer = 0;
+			}
+			this.allQuotesTimer = setInterval(request(), 30 * 1000)
+		} else {
+			this.quotesController.updateMarketsQuotes();
+		}
+	}
+}

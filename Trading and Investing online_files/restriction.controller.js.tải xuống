@@ -1,0 +1,35 @@
+class RestrictionController {
+	init() {
+		RestrictionService.getRestrictionStatePromise().then(restrictionState => {
+			const restrictedElements = document.querySelectorAll("[data-restriction]");
+			restrictedElements.forEach(el => {
+				const restictionStr = el.dataset.restriction.replace(/'/g, "\"");
+				const restrictionConfig = JSON.parse(restictionStr);
+				const isRestricted = RestrictionService.isRestrictedByAny(restrictionConfig, restrictionState);
+
+				if (isRestricted) {
+					el.classList.add("hide");
+				} else {
+					el.classList.remove("hide");
+					this.setTheme(el);
+					this.setRiskWarningBodyMargin();
+				}
+
+			})
+		})
+	}
+
+	setTheme(el) {
+		const theme = el.dataset.theme;
+
+		if (theme) {
+			const header = document.querySelector(".header-web-wrapper");
+			header.classList.remove("fx-theme--dark", "fx-theme--light");
+			header.classList.add("fx-theme--" + theme);
+		}
+	}
+
+	setRiskWarningBodyMargin() {
+		document.getElementById("main-layout-container").style.marginTop = document.getElementById("rates-ticker-section-container").offsetHeight + "px";
+	}
+}

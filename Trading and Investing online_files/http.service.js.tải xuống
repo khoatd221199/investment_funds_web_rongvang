@@ -1,0 +1,93 @@
+class HttpService {
+	static _initRequest(method, url, onloadFn) {
+		var xhr = new XMLHttpRequest();
+		xhr.open(method, url);
+		xhr.onload = function () {
+			onloadFn(xhr);
+		};
+		xhr.setRequestHeader("Content-Type", "application/json");
+		return xhr;
+	}
+
+	static get(url, onSuccessCallback) {
+		var xhr = HttpService._initRequest("GET", url, onSuccessCallback);
+		xhr.send();
+	}
+
+	static post(url, onSuccessCallback, data, token) {
+		var xhr = HttpService._initRequest("POST", url, onSuccessCallback);
+
+		if (token) {
+			xhr.setRequestHeader("googlecaptcha", token);
+		}
+
+		xhr.send(JSON.stringify(data));
+	}
+
+	static getPromise(url) {
+		var xhr = new XMLHttpRequest();
+		return new Promise(function (resolve, reject) {
+			xhr.onreadystatechange = function () {
+
+				if (xhr.readyState !== 4) return;
+
+				if (xhr.status >= 200 && xhr.status < 300) {
+
+					try {
+						var response = JSON.parse(xhr.response);
+						resolve(response);
+					} catch (error) {
+						resolve(xhr.response);
+					}
+
+				} else {
+					reject({
+						status: xhr.status,
+						statusText: xhr.statusText
+					});
+				}
+
+			};
+
+			xhr.open('GET', url, true);
+			xhr.send();
+		});
+	}
+
+	static postPromise(url, data, token) {
+		var xhr = new XMLHttpRequest();
+
+		return new Promise(function (resolve, reject) {
+
+			xhr.onreadystatechange = function () {
+
+				if (xhr.readyState !== 4) return;
+
+				if (xhr.status >= 200 && xhr.status < 300) {
+					try {
+						var response = JSON.parse(xhr.response);
+						resolve(response);
+					} catch (error) {
+						resolve(xhr.response);
+					}
+				} else {
+					reject({
+						status: xhr.status,
+						statusText: xhr.statusText
+					});
+				}
+
+			};
+
+			xhr.open('POST', url, true);
+			xhr.setRequestHeader("Content-Type", "application/json");
+
+			if (token) {
+				const recaptchaEl = document.querySelector("#recaptcha");
+				xhr.setRequestHeader(recaptchaEl ? "googlecaptcha" : "customcaptcha", token);
+			}
+
+			xhr.send(JSON.stringify(data));
+		});
+	}
+}

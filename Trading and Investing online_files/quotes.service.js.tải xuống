@@ -1,0 +1,64 @@
+class QuotesService {
+	static apiDomain = 'https://instruments.fxpro.technology';
+
+	static getQuotes(query) {
+		const q = encodeURIComponent(query);
+		const queryUrl = `${this.apiDomain}/symbols/prices?symbols=${q}`;
+		return HttpService.getPromise(queryUrl);
+	}
+
+	static getPopularQuotes(serverId) {
+		let query = "AMZN.O,MSFT.O,UBER.N,ZM.O,NFLX.O,AAPL.O,GOLD,GOOGL.O,TSLA.O,WTI,BRENT,NAT.GAS,AMC.N,GOLDEURO,SILVER,SILVEREURO,GOLDgr,GOLDoz,PLATINUM,#Germany40,#USSPX500,#US30,#UK100,#Germany50,#USNDAQ100,#Japan225,#Euro50";
+
+		if (serverId) {
+			query = `${query}&serverId=${serverId}`;
+		}
+
+		return QuotesService.getQuotes(query);
+	}
+
+	static getFuturesQuotes() {
+		const query = `${this.apiDomain}/symbols/prices?category=Futures`;
+
+		return HttpService.getPromise(query).then(res => {
+			return res.map(q => {
+				return {
+					name: q.name.substring(0, q.name.indexOf('_')),
+					ask: q.ask,
+					bid: q.bid,
+					digits: q.digits,
+					dailyChangePercentage: q.dailyChangePercentage
+				}
+			});
+		});
+	}
+
+	static getQuotesPricesByCategory(category) {
+		return HttpService.getPromise(`${this.apiDomain}/symbols/prices?category=${category}`);
+	}
+
+	static getForexQuotes() {
+		const query = "AUDUSD,EURCHF,EURGBP,EURJPY,EURUSD,GBPJPY,GBPUSD,USDCAD,USDCHF,USDJPY";
+		return QuotesService.getQuotes(query);
+	}
+	static getIndicesQuotes() {
+		const query = "#AUS200,#ChinaA50,#ChinaHShar,#Euro50,#France120,#France40,#Germany40,#Germany50,#GerTech30,#Holland25,#HongKong50,#Japan225,#Spain35,#Swiss20,#UK100,#UKmid250,#US30,#USNDAQ100,#USSPX500";
+		return QuotesService.getQuotes(query);
+	}
+	static getEnergiesQuotes() {
+		const query = "WTI,BRENT,NAT.GAS";
+		return QuotesService.getQuotes(query);
+	}
+	static getStocksQuotes() {
+		const query = "AMZN.O,MSFT.O,UBER.N,ZM.O,NFLX.O,AAPL.O,GOOGL.O,TSLA.O,META.O,BABA.N,AMC.N,PFE.N,MCD.N";
+		return QuotesService.getQuotes(query);
+	}
+	static getMetalsQuotes() {
+		const query = "GOLD,SILVER,PALLADIUM,PLATINUM";
+		return QuotesService.getQuotes(query);
+	}
+	static getSharesQuotes() {
+		const query = "AMZN.O,MSFT.O,UBER.N,ZM.O,NFLX.O,AAPL.O,GOOGL.O,TSLA.O,META.O,BABA.N,AMC.N,PFE.N,MCD.N";
+		return QuotesService.getQuotes(query);
+	}
+}

@@ -1,0 +1,20 @@
+class SectionPickAccountController {
+	init() {
+		return RestrictionService.getRestrictionStatePromise().then((state) => {
+			var data = {
+				restrictionState: state,
+			};
+			return HttpService.postPromise("/api/static-page/section-pick-account", data, null);
+		}).then(sectionPickAccount => {
+			document.querySelector("#section-pick-account").innerHTML = sectionPickAccount;
+
+			new Swiper('.fx-section--pick-account .swiper-container', {
+				slidesPerView: "auto",
+				resistanceRatio: 0,
+				observer: true,
+				observeParents: true,
+			});
+			return true;
+		});
+	}
+}

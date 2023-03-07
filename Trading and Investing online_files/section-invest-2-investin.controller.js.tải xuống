@@ -1,0 +1,60 @@
+class SectionInvest2InvestInController {
+
+	init() {
+		const instrumentsSwiper = new Swiper(".fx-section--invest-2-investin .swiper-instruments", {
+			slidesPerView: 'auto',
+			autoplay: true
+		});
+		this.setQuotes();
+		setInterval(this.setQuotes.bind(this), 30 * 1000)
+		this.setHeroImage();
+	}
+
+	setQuotes() {
+		QuotesService.getPopularQuotes().then(quotes => {
+			const instrumentEls = document.querySelectorAll(".fx-section--invest-2-investin .sharebox");
+			instrumentEls.forEach(instrumentEl => {
+				const quoteName = instrumentEl.dataset.quote;
+				const quote = quotes.find(q => q.name === quoteName);
+
+				if (quote) {
+					const priceEl = instrumentEl.querySelector(".price");
+					priceEl.innerHTML = `${quote.ask ? quote.ask.toFixed(quote.digits) : 0} <i class="fx-symbol-arrow">`;
+
+					if (quote.dailyChangePercentage > 0) {
+						priceEl.classList.remove("down");
+						priceEl.classList.add("up");
+					} else {
+						priceEl.classList.remove("up");
+						priceEl.classList.add("down");
+					}
+
+					if (quote.dailyChangePercentage) {
+						instrumentEl.querySelector(".diff").innerHTML = `${quote.dailyChangePercentage ? quote.dailyChangePercentage.toFixed(quote.Digits) : 0}%`;
+					}
+				}
+			});
+		});
+
+	}
+
+	setHeroImage() {
+		const pictureElDesktop = document.getElementById('desktop-hero-image');
+		const pictureElMobile = document.getElementById('mobile-hero-image');
+		const availableCountries = ['VN', 'TH', 'ID', 'MY', 'BR', 'MX', 'AR', 'NG', 'EG', 'TW', 'HK', 'CO', 'TR']
+
+		GeoIpService.getInstance().getCurrentUserCountry().then(function (userCountry) {
+			if (availableCountries.some(country => country.includes(userCountry.code.toUpperCase()))) {
+				pictureElDesktop.firstElementChild.srcset = `/assets/img/pages/mu-invest/hero-image-${userCountry.code.toLowerCase()}-desktop.webp`,
+					pictureElDesktop.lastElementChild.srcset = `/assets/img/pages/mu-invest/hero-image-${userCountry.code.toLowerCase()}-desktop.png`,
+					pictureElMobile.firstElementChild.srcset = `/assets/img/pages/mu-invest/hero-image-${userCountry.code.toLowerCase()}-mobile.webp`,
+					pictureElMobile.lastElementChild.srcset = `/assets/img/pages/mu-invest/hero-image-${userCountry.code.toLowerCase()}-mobile.png`;
+			} else {
+				pictureElDesktop.firstElementChild.srcset = '/assets/img/pages/mu-invest/hero-image-default-desktop.webp',
+					pictureElDesktop.lastElementChild.srcset = '/assets/img/pages/mu-invest/hero-image-default-desktop.png',
+					pictureElMobile.firstElementChild.srcset = '/assets/img/pages/mu-invest/hero-image-default-desktop.webp',
+					pictureElMobile.lastElementChild.srcset = '/assets/img/pages/mu-invest/hero-image-default-desktop.png';
+			}
+		});
+	}
+}

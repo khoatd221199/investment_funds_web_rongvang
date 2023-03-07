@@ -1,0 +1,12 @@
+class DomainService {
+    static isTestDomain() {
+        const testDomains = [
+            "localhost",
+            "uat-fxpro-landings-nodejs.azurewebsites.net"
+        ];
+        const isTestDomain = testDomains.some(function (domain) {
+            return window.location.origin.includes(domain)
+        });
+        return isTestDomain;
+    }
+}

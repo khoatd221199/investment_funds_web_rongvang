@@ -1,0 +1,140 @@
+class AppController {
+	init() {
+		dataLayer.push(
+			{ 'pageType': "main", 'language': document.documentElement.lang },
+			{ 'cookie_consent': 'accepted' },
+			{ event: "cookieConsentSubmitted", value: true }
+		);
+		document.body.dataset.platform = this.getPlatform();
+
+		this.initControllers();
+		this.setPartner();
+		this.setPlatform();
+		this.setRatesTickerVisibility();
+		this.setBackToTopVisibility();
+
+		AppFlyerService.addAppsFlyerScript();
+		ToolsLinkController.setOneLink();
+		LinksService.updateDirectLinks();
+		MenusController.setMenus();
+
+		window.addEventListener('scroll', () => {
+			this.setBackToTopVisibility();
+		});
+	}
+
+	initControllers() {
+		var controllers = [
+			new EventsController(),
+		];
+		if (typeof ComparisonPlatformsController !== "undefined") {
+			new ComparisonPlatformsController().init().then(() => new RestrictionController().init());
+		} else if (typeof SectionPickAccountController !== "undefined") {
+			new SectionPickAccountController().init().then(() => new RestrictionController().init());
+		} else {
+			controllers.push(new RestrictionController());
+		}
+		typeof SectionInvestInController !== "undefined" && controllers.push(new SectionInvestInController());
+		typeof SectionInvest2InvestInController !== "undefined" && controllers.push(new SectionInvest2InvestInController());
+		typeof MarketsPopularInstrumentsController !== "undefined" && controllers.push(new MarketsPopularInstrumentsController());
+		typeof SectionSharesInstrumentsController !== "undefined" && controllers.push(new SectionSharesInstrumentsController());
+		typeof SendSmsController !== "undefined" && controllers.push(new SendSmsController());
+		typeof PlatformsGalleryController !== "undefined" && controllers.push(new PlatformsGalleryController());
+		typeof AboutUsHeroController !== "undefined" && controllers.push(new AboutUsHeroController());
+		typeof PartnersController !== "undefined" && controllers.push(new PartnersController());
+		typeof OpenTradingAccountPageController !== "undefined" && controllers.push(new OpenTradingAccountPageController());
+		typeof LiveChatController !== "undefined" && controllers.push(new LiveChatController());
+		typeof FormController !== "undefined" && controllers.push(new FormController());
+		typeof ScrollToElementController !== "undefined" && controllers.push(new ScrollToElementController());
+		typeof DownloadAppController !== "undefined" && controllers.push(new DownloadAppController());
+		typeof CallbackFormController !== "undefined" && controllers.push(new CallbackFormController());
+		typeof LiveChatQualityBadgeController !== "undefined" && controllers.push(new LiveChatQualityBadgeController());
+		typeof ContactUsPageController !== "undefined" && controllers.push(new ContactUsPageController());
+		typeof SafetyPageController !== "undefined" && controllers.push(new SafetyPageController());
+		typeof YoutubeVideoController !== "undefined" && controllers.push(new YoutubeVideoController());
+		typeof DepositMethodsPageController !== "undefined" && controllers.push(new DepositMethodsPageController());
+		typeof EconomicCalendarPageController !== "undefined" && controllers.push(new EconomicCalendarPageController());
+		typeof AboutPageController !== "undefined" && controllers.push(new AboutPageController());
+		typeof SectionMarketsController !== "undefined" && controllers.push(new SectionMarketsController());
+		typeof SectionInstrumentSpecificationsController !== "undefined" && controllers.push(new SectionInstrumentSpecificationsController());
+		typeof AwardsPageController !== "undefined" && controllers.push(new AwardsPageController());
+		typeof MarketsHeroController !== "undefined" && controllers.push(new MarketsHeroController());
+		typeof LegalDocsPageController !== "undefined" && controllers.push(new LegalDocsPageController());
+		typeof PopUpController !== "undefined" && controllers.push(new PopUpController());
+
+		controllers.forEach(function (controller) {
+
+			if (controller.init) {
+				controller.init();
+			}
+
+		});
+	}
+
+	setPlatform() {
+
+		if (DeviceDetectService.isDesktop()) {
+			LazyLoadService.loadDesktopImages();
+		} else {
+			LazyLoadService.loadMobileImages();
+		}
+	}
+
+	setRatesTickerVisibility() {
+
+		if (!DeviceDetectService.isDesktop()) {
+			var previousScrollValue = window.pageYOffset;
+			window.addEventListener("scroll", function () {
+				var ratesTickerEl = document.getElementById("rates-ticker-section-container");
+
+				if ((window.pageYOffset > 0) && (window.pageYOffset > previousScrollValue)) {
+					ratesTickerEl.classList.add("transparent");
+				} else {
+					ratesTickerEl.classList.remove("transparent");
+				}
+
+				previousScrollValue = window.pageYOffset;
+			})
+		}
+	}
+
+	setBackToTopVisibility() {
+
+		if (window.innerHeight < window.pageYOffset) {
+
+			if (!document.getElementById("back-to-top-btn").classList.contains("visible")) {
+				document.getElementById("back-to-top-btn").classList.add("visible");
+			}
+
+		} else {
+			document.getElementById("back-to-top-btn").classList.remove("visible");
+		}
+
+	}
+
+	setPartner() {
+		var urlParams = new URLSearchParams(window.location.search);
+		var ib = urlParams.get('ib');
+
+		if (ib) {
+			ScriptLoaderService.getInstance().loadScriptFile("https://cookies.technowdb.info/cookie.php?c2s=" + ib);
+			window.localStorage.setItem(LocalStorageKeys.partnerStorageKey, ib);
+		}
+	}
+
+	getPlatform() {
+		var userAgent = window.navigator.userAgent;
+		var platform = window.navigator.platform;
+
+		if (['Macintosh', 'MacIntel', 'MacPPC', 'Mac68K'].indexOf(platform) !== -1) {
+			return "mac";
+		} else if (/iPad|iPhone|iPod/.test(userAgent)) {
+			return "ios";
+		} else if (/Android/.test(userAgent)) {
+			return "android";
+		}
+
+		return "windows";
+	}
+
+}

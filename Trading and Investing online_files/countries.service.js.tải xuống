@@ -1,0 +1,23 @@
+class CountriesService {
+	promise = null;
+	static _instance;
+
+	static getInstance() {
+		if (!CountriesService._instance) {
+			CountriesService._instance = new CountriesService();
+		}
+
+		return CountriesService._instance;
+	}
+
+
+	getCountriesPromise() {
+
+		if (this.promise) {
+			return this.promise;
+		}
+
+		this.promise = HttpService.getPromise("/api/static-page/countries");
+		return this.promise;
+	}
+}

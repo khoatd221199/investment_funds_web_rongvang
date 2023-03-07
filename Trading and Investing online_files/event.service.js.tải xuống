@@ -1,0 +1,40 @@
+class EventService {
+
+    static applyInputEvent(selector, callback) {
+        EventService.applyEventListener(selector, "input", callback);
+    }
+
+    static applyClickEvent(selector, callback) {
+        EventService.applyEventListener(selector, "click", callback);
+    }
+
+    static applyKeyUpEvent(selector, callback) {
+        EventService.applyEventListener(selector, "keyup", callback);
+    }
+
+    static applyMouseEnterEvent(selector, callback) {
+        EventService.applyEventListener(selector, "mouseenter", callback);
+    }
+
+    static applyMouseLeaveEvent(selector, callback) {
+        EventService.applyEventListener(selector, "mouseleave", callback);
+    }
+
+    static applyKeyPressEvent(selector, callback) {
+        EventService.applyEventListener(selector, "keypress", callback);
+    }
+
+    static applyBlurEvent(selector, callback) {
+        EventService.applyEventListener(selector, "blur", callback);
+    }
+
+    static applyMouseOverEvent(selector, callback) {
+        EventService.applyEventListener(selector, "mouseover", callback);
+    }
+
+    static applyEventListener(selector, event, callback) {
+        Array.prototype.forEach.call(document.querySelectorAll(selector), function (element) {
+            element.addEventListener(event, callback);
+        });
+    }
+}

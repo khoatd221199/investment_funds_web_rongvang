@@ -1,0 +1,41 @@
+class ToolsLinkController {
+	static setOneLink() {
+		RestrictionService.getRestrictionStatePromise().then(state => {
+			if (window && window.AF_SMART_SCRIPT) {
+				ToolsLinkController.initOneLink(state.regulator, state.currentLanguage);
+			} else {
+				ScriptLoaderService.getInstance().loadScript("assets/static-pages/shared/scripts/lib/onelink-smart-script-v2.3.0.js").then(() => {
+					ToolsLinkController.initOneLink(state.regulator, state.currentLanguage);
+				});
+			}
+		});
+	}
+
+	static initOneLink(regulator, language) {
+		var oneLinkURL = "https://fxpro.onelink.me/NHVX/";
+		var campaign = { keys: ["utm_campaign"], defaultValue: "website-cross-promo_smart_non-EU" };
+
+		if (language == 'ru') {
+			oneLinkURL = "https://fxpro.onelink.me/s3R9/";
+			campaign = { keys: ["utm_campaign"], defaultValue: "website-cross-promo_smart_RU" };
+		} else if (["FCA", "CySec"].includes(regulator)) {
+			oneLinkURL = "https://fxpro.onelink.me/YhES/";
+			campaign = { keys: ["utm_campaign"], defaultValue: "website-cross-promo_smart_EU" };
+		}
+
+		var result = window.AF_SMART_SCRIPT.generateOneLinkURL({
+			oneLinkURL: oneLinkURL,
+			afParameters: {
+				mediaSource: { keys: ["utm_source"], defaultValue: "Website-Cross-Promo" },
+				channel: { keys: [], defaultValue: "Website-Cross-Promo" },
+				campaign: campaign,
+				adSet: { keys: ["utm_term"] },
+				googleClickIdKey: "af_sub4"
+			}
+		});
+
+		Array.prototype.forEach.call(document.querySelectorAll(".onelink"), function (element) {
+			element.href = result.clickURL;
+		});
+	}
+}

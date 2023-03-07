@@ -1,0 +1,5 @@
+var CookieNames = {
+	clientId: "clientId",
+	userCountry: "fx_user_country",
+	popupClosed: "fx_popup_closed"
+}

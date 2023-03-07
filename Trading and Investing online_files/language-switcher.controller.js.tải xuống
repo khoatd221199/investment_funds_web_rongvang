@@ -1,0 +1,56 @@
+class LanguageSwitcherController {
+
+	static showDesktopLanguageSwitcher() {
+		LanguageSwitcherController._setLanguages("language-switcher");
+	}
+
+	static showMobileLanguageSwitcher() {
+		LanguageSwitcherController._setLanguages("mobile-language-panel");
+	}
+
+	static _setLanguages(languageSwitcherId) {
+		var euLanguageHolder = document.querySelector("#" + languageSwitcherId + " .european.language-holder");
+		var gbLanguageHolder = document.querySelector("#" + languageSwitcherId + " .global.language-holder");
+		if (!euLanguageHolder.innerHTML.trim()) {
+
+			var onload = function (xhr) {
+				if (xhr.status === 200) {
+					var languages = JSON.parse(xhr.response);
+					euLanguageHolder.innerHTML = LanguageSwitcherController._getLanguages("European", languages);
+					gbLanguageHolder.innerHTML = LanguageSwitcherController._getLanguages("Global", languages);
+				}
+			}
+
+			HttpService.get("/api/static-page/investments/languages", onload);
+		}
+	}
+
+	static _getLanguages(type, languages) {
+		const lang = document.documentElement.lang;
+		return languages.filter(function (language) {
+			return language.type === type;
+		}).map(function (language) {
+			const classActive = language.shortName === lang ? 'active-item' : '';
+			const isTestDomain = DomainService.isTestDomain();
+
+			let pathname = window.location.pathname.replace(/^\/\w{2}$/, "").replace(/^\/\w{2}\//, "/").replace(/^\/$/, "");
+
+			if (isTestDomain) {
+				pathname += `${window.location.search}`;
+			}
+
+			const langParam = language.skipShortName && !isTestDomain ? "" : `/${language.shortName}`;
+
+			var url = `${window.location.origin}${langParam}${pathname}`;
+
+			return '<a _ngcontent-ng-cli-universal-c92=""  rel="nofollow noopener" class="dropdown-item ' + classActive + '" href="' + url + '" > <i _ngcontent-ng-cli-universal-c92="" class="flag-icon flag-icon-' + language.countryFlagCode + '"></i><span class="language-name">' + language.fullName + '</span></a> ';
+		}).join("");
+	}
+
+	static hideMobileLanguageSwitcher() {
+		var langSwitcherEl = document.getElementById("mobile-language-switcher");
+		var langPanelEl = document.getElementById("mobile-language-panel");
+		langSwitcherEl.classList.remove("show");
+		langPanelEl.classList.remove("show");
+	}
+}

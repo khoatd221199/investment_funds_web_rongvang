@@ -1,0 +1,7 @@
+class DeviceDetectService {
+
+    static isDesktop() {
+        return window.innerWidth >= 1024;
+    }
+
+}

@@ -1,0 +1,59 @@
+class QuotesController {
+	quotes = [];
+
+	setMarketsQuotes() {
+		var category = document.querySelector(".active.market-select-btn").dataset.category;
+
+		var onload = response => {
+			this.quotes = response;
+		};
+
+		const sectionMarkets = document.querySelector("#section-markets");
+		const serverId = sectionMarkets ? sectionMarkets.dataset.serverId : null;
+
+		if (category === "FuturesAll") {
+			return QuotesService.getFuturesQuotes().then(onload);
+		} else {
+			return QuotesService.getPopularQuotes(serverId).then(onload)
+		}
+	}
+
+	updateMarketsQuotes() {
+		Array.prototype.forEach.call(document.getElementsByClassName("market-instrument"), instrument => {
+			var id = instrument.id;
+			var filteredQuotes = this.quotes.filter(q => {
+				return q.name && q.name.indexOf(instrument.dataset.name) !== -1;
+			});
+
+			if (filteredQuotes.length) {
+				var instrumentQuote = filteredQuotes[0];
+				var buy = document.querySelector("#" + id + " .buy");
+				var sell = document.querySelector("#" + id + " .sell");
+				var difference = document.querySelector("#" + id + " .difference");
+				var spread = document.querySelector("#" + id + " .spread");
+
+				buy.innerText = instrumentQuote.ask ? instrumentQuote.ask.toFixed(instrumentQuote.digits) : "0"
+				sell.innerText = instrumentQuote.bid ? instrumentQuote.bid.toFixed(instrumentQuote.digits) : "0"
+
+				if (difference) {
+					difference.innerText = instrumentQuote.dailyChangePercentage ? instrumentQuote.dailyChangePercentage.toFixed(2) + "%" : "0%"
+				}
+
+				if (spread) {
+					spread.innerText = instrumentQuote.spread || "0";
+				}
+
+				if (instrumentQuote.dailyChangePercentage > 0) {
+					instrument.classList.remove("down");
+					instrument.classList.add("up");
+				} else {
+					instrument.classList.add("down");
+					instrument.classList.remove("up");
+				}
+
+			}
+
+		});
+
+	}
+}

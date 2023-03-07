@@ -1,0 +1,165 @@
+class MenusController {
+	intersectionObserver;
+	intersectionObserverInitialized = false;
+
+	static setMenus() {
+		EventService.applyMouseEnterEvent(".nav-item.dropdown", MenusController.showSubmenu);
+		EventService.applyMouseLeaveEvent(".nav-item.dropdown", MenusController.hideSubmenu);
+		EventService.applyClickEvent(".navbarDropdown", MenusController.toggleSubmenu);
+		EventService.applyClickEvent(".toggle-list", MenusController.toggleList);
+		EventService.applyClickEvent(".opener-sub-menu", MenusController.showStickyMenu);
+		EventService.applyClickEvent(".navbar-opener", MenusController.toggleNavbar);
+
+		MenusController.initDropdownMenu();
+
+		if (document.querySelector('.header-ghost')) {
+			MenusController.animateOnIntersection();
+		}
+	}
+
+	static showSubmenu(event) {
+		var menuId = event.currentTarget.id;
+		var submenuId = event.currentTarget.dataset.submenu;
+
+		if (DeviceDetectService.isDesktop()) {
+			document.getElementById(menuId).classList.add("show", "active");
+			document.getElementById(submenuId).classList.add("show");
+		}
+
+	}
+
+	static hideSubmenu(event) {
+		var menuId = event.currentTarget.id;
+		var submenuId = event.currentTarget.dataset.submenu;
+
+		if (DeviceDetectService.isDesktop()) {
+			document.getElementById(menuId).classList.remove("show", "active");
+			document.getElementById(submenuId).classList.remove("show");
+		}
+	}
+
+	static toggleSubmenu(event) {
+		var menuId = event.currentTarget.dataset.menu;
+		var submenuId = event.currentTarget.dataset.submenu;
+
+		if (window.innerWidth < 1024) {
+
+			var activeMenu = document.querySelector(".nav-item.show.active");
+
+			if (activeMenu && activeMenu.id !== menuId) {
+				activeMenu.classList.remove("show", "active");
+				document.querySelector(".nav-item .dropdown-menu.show").classList.remove("show");
+			}
+
+			var menuEl = document.getElementById(menuId);
+			var subMenuEl = document.getElementById(submenuId);
+
+			if (menuEl.classList.contains("show")) {
+				menuEl.classList.remove("show", "active");
+				subMenuEl.classList.remove("show");
+			} else {
+				menuEl.classList.add("show", "active");
+				subMenuEl.classList.add("show");
+			}
+		}
+	}
+
+	static toggleList(event) {
+		var parentId = event.currentTarget.parentNode.id;
+
+		if (window.innerWidth < 1024) {
+			var parentEl = document.getElementById(parentId);
+			var listEl = document.querySelector("#" + parentId + " ul");
+
+			if (parentEl.classList.contains("expanded")) {
+				parentEl.classList.remove("expanded");
+				listEl.classList.add("d-none");
+			} else {
+				parentEl.classList.add("expanded");
+				listEl.classList.remove("d-none");
+			}
+		}
+	}
+
+	static showStickyMenu(event) {
+
+		if (window.innerWidth < 1024) {
+			document.querySelector(".opener-sub-menu__title").style.display = 'block';
+		}
+
+		if (event.currentTarget.classList.contains("expanded")) {
+			event.currentTarget.classList.remove("expanded");
+			document.querySelector(".inline-menu-list__wrapper .inline-menu-list").classList.remove("submenu-visible");
+			document.querySelector(".sub-menu-holder").classList.remove("expandedBlock");
+			document.querySelector(".sub-menu-holder .heading").classList.remove("expanded");
+			document.querySelector(".sub-menu-holder .dropdown-menu").classList.remove("show");
+		} else {
+			event.currentTarget.classList.add("expanded");
+			document.querySelector(".inline-menu-list__wrapper .inline-menu-list").classList.add("submenu-visible");
+			document.querySelector(".sub-menu-holder").classList.add("expandedBlock");
+			document.querySelector(".sub-menu-holder .heading").classList.add("expanded");
+			document.querySelector(".sub-menu-holder .dropdown-menu").classList.add("show");
+
+			if (window.innerWidth >= 1024) {
+				document.querySelector(".opener-sub-menu__title").style.display = 'block';
+			} else {
+				document.querySelector(".opener-sub-menu__title").style.display = 'none';
+			}
+		}
+	}
+
+	static animateOnIntersection() {
+		const inStickyRange = 1024 <= window.innerWidth;
+		if (!inStickyRange) {
+			document.querySelector(".sub-menu-holder .sticky-block").style.display = 'none';
+		}
+
+		if (!MenusController.intersectionObserverInitialized && inStickyRange) {
+			MenusController.intersectionObserver = new IntersectionObserver(entries => {
+				entries.forEach(entry => {
+					if (entry.isIntersecting) {
+						document.querySelector(".header-web-wrapper").classList.remove("sticky-header-wrapper");
+						document.querySelector(".header-web").classList.remove("sticky-header");
+						document.querySelector(".sub-menu-holder .sticky-none").style.display = 'block';
+						document.querySelector(".sub-menu-holder .sticky-block").style.display = 'none';
+					} else {
+						document.querySelector(".header-web-wrapper").classList.add("sticky-header-wrapper");
+						document.querySelector(".header-web").classList.add("sticky-header");
+						document.querySelector(".sub-menu-holder .sticky-none").style.display = 'none';
+						document.querySelector(".sub-menu-holder .sticky-block").style.display = 'block';
+					}
+				});
+			}, {
+				threshold: [0, 1]
+			});
+
+			MenusController.intersectionObserver.observe(document.querySelector('.header-ghost'));
+			MenusController.intersectionObserverInitialized = true;
+		} else if (!inStickyRange && MenusController.intersectionObserverInitialized && MenusController.intersectionObserver && MenusController.intersectionObserver.disconnect) {
+			MenusController.intersectionObserver.disconnect();
+			MenusController.intersectionObserverInitialized = false;
+		}
+	}
+
+	static initDropdownMenu() {
+		if (document.querySelector("#dropdownMenuLink")) {
+			if (window.innerWidth < 1024) {
+				document.querySelector("#dropdownMenuLink .bullets").style.display = 'none';
+				document.querySelector('.section-space-after-header').style.paddingTop = "140px";
+			} else {
+				document.querySelector("#dropdownMenuLink .bullets").style.display = 'block';
+				document.querySelector('.section-space-after-header').style.paddingTop = "300px";
+			}
+		}
+	}
+
+	static toggleNavbar(event) {
+		if (event.currentTarget.classList.contains("collapsed")) {
+			event.currentTarget.classList.remove("collapsed");
+			document.querySelector("#main-menu").classList.remove("show");
+		} else {
+			event.currentTarget.classList.add("collapsed");
+			document.querySelector("#main-menu").classList.add("show");
+		}
+	}
+}

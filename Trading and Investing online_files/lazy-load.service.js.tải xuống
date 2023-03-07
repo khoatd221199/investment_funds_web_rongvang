@@ -1,0 +1,121 @@
+class LazyLoadService {
+
+    static loadSwiperHeroImages() {
+        LazyLoadService._setImages("#section-swiper-hero .fx-lazy-desktop, #section-swiper-hero  .fx-lazy");
+        LazyLoadService._loadAnimations("#section-swiper-hero .animated");
+    }
+
+    static loadDesktopImages() {
+        LazyLoadService._setImages(".fx-lazy-desktop, .fx-lazy");
+        LazyLoadService._loadAnimations(".animated");
+    }
+
+    static loadMobileImages() {
+        LazyLoadService._setImages(".fx-lazy-mobile, .fx-lazy");
+        LazyLoadService._loadAnimations(".animated");
+    }
+
+    static _setImages(querySelector) {
+        var lazyImages = document.querySelectorAll(querySelector);
+
+        if ("IntersectionObserver" in window) {
+            var lazyImageObserver = new IntersectionObserver(entries => {
+                entries.forEach(function (entry) {
+                    if (entry.isIntersecting) {
+                        var lazyImage = entry.target;
+                        LazyLoadService._loadImage(lazyImage);
+                        lazyImageObserver.unobserve(lazyImage);
+                    }
+                });
+            }, { threshold: 0.3 });
+
+            lazyImages.forEach(function (lazyImage) {
+                lazyImageObserver.observe(lazyImage);
+            });
+        } else {
+
+            Array.prototype.forEach.call(lazyImages, function (image) {
+                LazyLoadService._loadImage(image);
+            });
+        }
+
+    }
+
+    static _loadAnimations(selector) {
+        var loadAnimation = function (el) {
+            var animation = el.dataset.animate;
+
+            if (animation) {
+                el.classList.add(animation);
+            }
+        }
+
+        var animatedElements = document.querySelectorAll(selector);
+
+        if ("IntersectionObserver" in window) {
+            Array.prototype.forEach.call(animatedElements, function (el) {
+                var threshold = el.dataset.threshold ? el.dataset.threshold : 0.2;
+                var animationObserver = new IntersectionObserver(entries => {
+                    entries.forEach(function (entry) {
+                        if (entry.isIntersecting) {
+                            loadAnimation(entry.target);
+                            animationObserver.unobserve(entry.target);
+                        }
+                    });
+                }, { threshold: threshold });
+
+                animationObserver.observe(el);
+            })
+        } else {
+            Array.prototype.forEach.call(animatedElements, function (el) {
+                loadAnimation(el);
+            })
+        }
+    }
+
+
+    static _loadImage(image) {
+        var isIE11 = !!window.MSInputMethodContext && !!document.documentMode;
+        var srcset = image.dataset.srcset;
+        var src = image.dataset.src;
+        const isRetina = window.devicePixelRatio > 1;
+
+        if (image.classList.contains("retina") && isRetina) {
+            srcset = LazyLoadService.setRetina(srcset);
+            src = LazyLoadService.setRetina(src);
+        }
+
+        if (isIE11) {
+
+            if (!image.src && srcset && srcset.indexOf(".webp") < 0) {
+                image.src = srcset;
+            }
+
+            if (!image.src && src && src.indexOf(".webp") < 0) {
+                image.src = src;
+            }
+
+        } else {
+
+            if (!image.srcset && srcset) {
+                image.srcset = srcset;
+            }
+
+            if (!image.src && src) {
+                image.src = src;
+            }
+
+        }
+
+        image.classList.add("loaded");
+    }
+
+    static setRetina(src) {
+        if (src) {
+            const srcArr = src.split(".");
+            src = srcArr[0] + "@2x." + srcArr[1];
+        }
+
+        return src;
+    }
+}

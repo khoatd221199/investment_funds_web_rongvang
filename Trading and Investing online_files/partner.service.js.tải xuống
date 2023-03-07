@@ -1,0 +1,23 @@
+class PartnerService {
+    static getPartner() {
+        var partnerId = window.localStorage.getItem(LocalStorageKeys.partnerStorageKey);
+
+        if (partnerId) {
+            return new Promise(function (resolve, reject) { resolve(partnerId) });
+        } else {
+            return ScriptLoaderService.getInstance().loadScript("https://cookies.technowdb.info/cookie.php/?gc").then(function () {
+                try {
+
+                    if (__FXPROCookie && /^[a-zA-Z0-9_]{1,30}$/g.test(__FXPROCookie)) {
+                        return __FXPROCookie;
+                    }
+
+                    return "";
+                } catch (e) {
+                    return "";
+                }
+            });
+        }
+
+    }
+}

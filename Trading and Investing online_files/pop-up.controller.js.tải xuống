@@ -1,0 +1,35 @@
+class PopUpController {
+	popupEl = document.querySelector(".popup-section-promo");
+
+	constructor() {
+		EventService.applyClickEvent(".close-popup", this.onClosePopup.bind(this));
+	}
+
+	init() {
+		this.showPopup();
+	}
+
+	onClosePopup() {
+		CookieService.set(CookieNames.popupClosed, true, 10 * 365);
+		this.popupEl.classList.remove("show");
+	}
+
+	showPopup() {
+		RestrictionService.getRestrictionStatePromise()
+			.then((state) => {
+				const anchorElement = document.getElementById('voucher-link-by-country');
+				const arabicWebinarCountries = ['AE', 'EG', 'LB', 'OM', 'KW', 'QA', 'BH', 'SA', 'MA', 'JO', 'PS', 'DZ', 'DJ'];
+				const webinarOuter = document.getElementById('webinar-outer');
+				let screenType = DeviceDetectService.isDesktop() ? 'desktop' : 'mobile';
+				let webinarLanguage = state.currentLanguage === "ar" ? "ar" : "en";
+
+				if (arabicWebinarCountries.includes(state.country) && !CookieService.get(CookieNames.popupClosed)) {
+					this.popupEl.classList.add("show");
+					anchorElement.href = `https://promo.fxpro.com/${webinarLanguage}/arabic-webinar`;
+					anchorElement.style.backgroundImage = `url(/assets/img/sections/lucky-draw-popup/arabic-webinar-banner-${webinarLanguage}-${screenType}.png)`;
+					webinarOuter.classList.add("webinar-outer");
+				}
+			}
+			);
+	}
+}

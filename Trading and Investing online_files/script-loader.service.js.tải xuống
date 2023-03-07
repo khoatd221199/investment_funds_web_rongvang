@@ -1,0 +1,67 @@
+class ScriptLoaderService {
+    scripts = [];
+    static _instance;
+
+    static getInstance() {
+        if (!ScriptLoaderService._instance) {
+            ScriptLoaderService._instance = new ScriptLoaderService();
+        }
+
+        return ScriptLoaderService._instance;
+    }
+
+    loadScript(src) {
+
+        const id = new Date().getTime();
+        return new Promise((resolve, reject) => {
+
+            const script = document.createElement('script');
+            script.type = 'text/javascript';
+            script.src = src;
+            script.id = id;
+            script.onload = () => {
+                resolve({ loaded: true, status: 'Loaded' });
+                this.scripts.forEach((script) => {
+                    this._removeElement(script);
+                });
+
+                this.scripts = [];
+            };
+            script.onerror = (error) => { resolve({ loaded: false, status: 'Loaded' }) };
+            document.getElementsByTagName('head')[0].appendChild(script);
+
+            this.scripts.push(script);
+
+        });
+
+    }
+
+    createScript(content, options) {
+        if (options && options.id) {
+            const previousScript = document.getElementById(options.id);
+            if (previousScript) {
+                this._removeElement(previousScript);
+            }
+        }
+        const firstScriptElement = document.getElementsByTagName("script")[0];
+        const script = document.createElement("script");
+        if (options && options.id) {
+            script.id = options.id;
+        }
+        script.type = "text/javascript";
+        script.innerHTML = content;
+        firstScriptElement.parentNode.insertBefore(script, firstScriptElement);
+        return script;
+    }
+
+    loadScriptFile(path) {
+        const script = document.createElement("script");
+        script.src = path;
+        script.async = false
+        document.body.appendChild(script);
+    }
+
+    _removeElement(element) {
+        element.parentElement.removeChild(element);
+    }
+}

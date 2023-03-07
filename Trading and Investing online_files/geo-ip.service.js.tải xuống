@@ -1,0 +1,128 @@
+class GeoIpService {
+	geoDataPromise = null;
+	jurisdictionsPromise = null;
+	static _instance;
+
+	unidentifiedCountry = {
+		name: 'Unidentified',
+		code: 'Unidentified',
+		regulators: [],
+		regulator: this._getRegulator("gm")
+	};
+
+
+	static getInstance() {
+		if (!GeoIpService._instance) {
+			GeoIpService._instance = new GeoIpService();
+		}
+
+		return GeoIpService._instance;
+	}
+
+	getGeoDataPromise() {
+
+		if (this.geoDataPromise) {
+			return this.geoDataPromise;
+		}
+
+		this.geoDataPromise = HttpService.getPromise("https://geoip2.techsubservices.com/api/geo").then(function (response) {
+			if (response.country) {
+				CookieService.set(CookieNames.userCountry, response.country, 90);
+			}
+
+			return response;
+		}).catch(() => {
+			const country = CookieService.get(CookieNames.userCountry);
+
+			return {
+				ip: "",
+				country: country ? country.toUpperCase() : null,
+			};
+		});
+
+		return this.geoDataPromise;
+	}
+
+	getJurisdictionsPromise() {
+
+		if (this.jurisdictionsPromise) {
+			return this.jurisdictionsPromise;
+		}
+
+		this.jurisdictionsPromise = HttpService.getPromise("/api/country").then((response) => {
+			return response.map((country) => {
+				return {
+					name: country.name,
+					code: country.code,
+					regulators: this._getRegulators(country.regulators),
+					regulator: this._getRegulator(country.defaultRegulator) || this._getRegulator("gm"),
+					regulatorCode: country.defaultRegulator || "gm",
+					partnersOnboardingAllowed: country.partnersOnboardingAllowed
+				};
+			});
+		});
+		return this.jurisdictionsPromise;
+	}
+
+	async getCurrentUserCountry() {
+		const [geoData, countries] = await Promise.all([
+			this.getGeoDataPromise(),
+			CountriesService.getInstance().getCountriesPromise()
+		]);
+
+		let userCountry = this.unidentifiedCountry;
+
+		if (geoData.country) {
+			userCountry = countries.filter(country => {
+				return country.code.toLowerCase() === geoData.country.toLowerCase();
+			})[0];
+		}
+
+		return userCountry;
+	}
+
+	async getCountryRegulator() {
+		const [geoData, jurisdictionData] = await Promise.all([
+			this.getGeoDataPromise(),
+			this.getJurisdictionsPromise()
+		]);
+		const country = geoData.country;
+		const regulatorConfig = jurisdictionData && jurisdictionData.find(config => geoData && geoData.country && config.code && config.code.toUpperCase() === geoData.country.toUpperCase());
+		const regulator = regulatorConfig && regulatorConfig.regulator ? regulatorConfig.regulator : "Global";
+		const regulatorCode = regulatorConfig && regulatorConfig.regulatorCode ? regulatorConfig.regulatorCode : "gm";
+		return {
+			country,
+			regulator,
+			regulatorCode,
+			ip: geoData.ip
+		};
+	}
+
+	_getRegulators(regulators) {
+
+		if (regulators) {
+			return regulators.map((regulator) => {
+				return this._getRegulator(regulator);
+			});
+		}
+
+		return [];
+	}
+
+	_getRegulator(regulator) {
+		switch (regulator) {
+			case "gm":
+				return "Global";
+			case "cysec":
+				return "CySec";
+			case "fca":
+				return "FCA";
+			case "fscm":
+				return "FSCM";
+			case "fsas":
+				return "FSAS";
+			default:
+				return undefined;
+		}
+	}
+}

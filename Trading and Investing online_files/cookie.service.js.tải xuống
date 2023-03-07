@@ -1,0 +1,25 @@
+class CookieService {
+    static get(key) {
+        var cookies = document.cookie.split('; ');
+
+        if (cookies.length) {
+            var cookie = cookies.filter(function (row) { return row.match("^" + key) })[0];
+
+            if (cookie) {
+                return decodeURI(cookie.split('=')[1]);
+            }
+        }
+
+        return null;
+    }
+
+    static set(key, value, expirationDays) {
+        var currentDate = new Date();
+        var expirationDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() + expirationDays).toGMTString();
+        document.cookie = key + "=" + value + "; expires=" + expirationDate + ";";
+    }
+
+    static remove(key) {
+        document.cookie = key + '=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+    }
+}

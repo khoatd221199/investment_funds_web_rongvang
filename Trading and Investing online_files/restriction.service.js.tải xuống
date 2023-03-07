@@ -1,0 +1,51 @@
+class RestrictionService {
+
+	static getRestrictionStatePromise() {
+		return GeoIpService.getInstance().getCountryRegulator().then(({ country, regulator, ip }) => {
+			return {
+				ip,
+				country,
+				regulator,
+				currentLanguage: document.documentElement.lang,
+				route: document.body.dataset.route,
+				domain: document.body.dataset.domain,
+			}
+		})
+	}
+
+	static isRestrictedByAny(restrictionConfig, restrictionState) {
+		if (restrictionState.currentLanguage && restrictionConfig.enabledLanguages && !restrictionConfig.enabledLanguages.includes(restrictionState.currentLanguage)) {
+			return true;
+		}
+
+		if (restrictionState.currentLanguage && restrictionConfig.disabledLanguages && restrictionConfig.disabledLanguages.includes(restrictionState.currentLanguage)) {
+			return true;
+		}
+
+		if (restrictionState.country && restrictionConfig.enabledCountries && !restrictionConfig.enabledCountries.includes(restrictionState.country)) {
+			return true;
+		}
+
+		if (restrictionState.country && restrictionConfig.disabledCountries && restrictionConfig.disabledCountries.includes(restrictionState.country)) {
+			return true;
+		}
+
+		if (restrictionState.regulator && restrictionConfig.enabledRegulators && !restrictionConfig.enabledRegulators.includes(restrictionState.regulator)) {
+			return true;
+		}
+
+		if (restrictionState.regulator && restrictionConfig.disabledRegulators && restrictionConfig.disabledRegulators.includes(restrictionState.regulator)) {
+			return true;
+		}
+
+		if (restrictionState.route && restrictionConfig.disabledForRoutes && this.isIncludedInRoutes(restrictionState.route, restrictionConfig.disabledForRoutes)) {
+			return true;
+		}
+
+		if (restrictionState.route && restrictionConfig.enabledForRoutes && !this.isIncludedInRoutes(restrictionState.route, restrictionConfig.enabledForRoutes)) {
+			return true;
+		}
+
+		return false;
+	}
+}

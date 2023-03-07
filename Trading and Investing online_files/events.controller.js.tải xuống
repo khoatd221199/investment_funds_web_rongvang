@@ -1,0 +1,57 @@
+class EventsController {
+    init() {
+        EventService.applyMouseEnterEvent("#language-switcher", this.showLanguages);
+        EventService.applyMouseLeaveEvent("#language-switcher", this.hideLanguages);
+        EventService.applyClickEvent(".navbar-toggler", this.showSideMenu);
+        EventService.applyClickEvent(".navbar-close-menu", this.hideSideMenu);
+        EventService.applyClickEvent(".close-get-started", this.closeGetStarted);
+        EventService.applyClickEvent(".back-to-top", this.goToTop);
+        EventService.applyClickEvent("#dropdownLanguage[data-mobile='true']", this.toggleMobileLanguages);
+        EventService.applyClickEvent(".mobile-language-panel .close-icon", this.toggleMobileLanguages);
+    }
+
+    showLanguages() {
+        LanguageSwitcherController.showDesktopLanguageSwitcher();
+        document.getElementById("language-switcher").classList.add("show");
+        document.getElementById("language-panel").classList.add("show");
+    };
+
+    hideLanguages() {
+        document.getElementById("language-switcher").classList.remove("show");
+        document.getElementById("language-panel").classList.remove("show");
+    };
+
+    showSideMenu() {
+        document.getElementById("main-menu").classList.add("show");
+        document.getElementById("rates-ticker-section-container").classList.add("low-zindex");
+        document.body.classList.add("no-scroll");
+    };
+
+    hideSideMenu() {
+        document.getElementById("main-menu").classList.remove("show");
+        document.getElementById("rates-ticker-section-container").classList.remove("low-zindex");
+        document.body.classList.remove("no-scroll");
+    };
+
+    closeGetStarted() {
+        document.getElementById("get-started-block").classList.remove("d-md-block");
+        document.cookie = 'fx_get_started_shown=true;expires=' + new Date(Date.now() + 1 * 24 * 3600 * 1000) + ';';
+    };
+
+    goToTop() {
+        window.scrollTo(0, 0);
+    }
+
+    toggleMobileLanguages() {
+        var langSwitcherEl = document.getElementById("mobile-language-switcher");
+        var langPanelEl = document.getElementById("mobile-language-panel");
+
+        if (langSwitcherEl.classList.contains("show")) {
+            LanguageSwitcherController.hideMobileLanguageSwitcher()
+        } else {
+            LanguageSwitcherController.showMobileLanguageSwitcher();
+            langSwitcherEl.classList.add("show");
+            langPanelEl.classList.add("show");
+        }
+    }
+}

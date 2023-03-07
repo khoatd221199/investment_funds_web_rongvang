@@ -1,0 +1,47 @@
+class LinksService {
+
+	static updateDirectLinks() {
+		return GeoIpService.getInstance().getCountryRegulator().then(({ country, regulator }) => {
+			LinksService.getLinks(country, regulator).then(({ register, login, deposit, partner, registerPartner }) => {
+				const registerSelector = ".direct-register-link";
+				const loginSelector = ".direct-login-link";
+				const depositSelector = ".direct-deposit-link";
+				const partnerSelector = ".direct-partner-link";
+				const registerPartnerSelector = ".direct-register-partner-link";
+				LinksService.setDirectLinks(register, registerSelector, regulator);
+				LinksService.setDirectLinks(login, loginSelector, regulator);
+				LinksService.setDirectLinks(deposit, depositSelector, regulator);
+				LinksService.setDirectLinks(partner, partnerSelector, regulator);
+				LinksService.setDirectLinks(registerPartner, registerPartnerSelector, regulator);
+			});
+		})
+	}
+
+	static getLinks(country, regulator) {
+		return PartnerService.getPartner().then((partner) => {
+			const data = {
+				config: {
+					country,
+					partner: partner,
+					currentLang: document.documentElement.lang,
+					regulator,
+					host: document.body.dataset.domain
+				}
+			}
+
+			return HttpService.postPromise("/api/static-page/direct-link", data);
+		});
+	}
+
+	static setDirectLinks(linkConfig, selector, defaultRegulator) {
+		const elements = document.querySelectorAll(selector);
+		Array.prototype.forEach.call(elements, function (element) {
+			const url = element.dataset?.url || "";
+			const regulator = element.dataset?.regulator || defaultRegulator;
+			const link = linkConfig[regulator];
+			element.href = link + url;
+			element.setAttribute('target', '_blank');
+			element.setAttribute('rel', 'nofollow noopener');
+		});
+	}
+}

@@ -1,0 +1,15 @@
+@font-face {
+    font-family: 'Noto Sans';
+    font-display: swap;
+    src: url('NotoSansSC-Black.otf') format("opentype");
+    font-weight: 900;
+
+}
+
+@font-face {
+    font-family: 'Noto Sans';
+    font-display: swap;
+    src: url('NotoSansSC-Regular.otf') format("opentype");
+    font-weight: 400;
+
+}
